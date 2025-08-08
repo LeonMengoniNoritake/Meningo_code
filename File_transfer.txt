@@ -1,0 +1,64 @@
+############ Transferring files from pc to remote server/machine
+
+# Connect to remote server
+ssh -J lmengoni@jump.fbk.eu lmengoni@miles.fbk.eu
+
+# Create remote MILES directory and its 2 subdirectories: Code and Results.
+ssh -J lmengoni@jump.fbk.eu lmengoni@miles.fbk.eu "mkdir -p MILES/Code MILES/Results"
+
+# Copy entire Data subdirectory to MILES remote directory with custom permissions
+rsync -avz --chmod=D775,F664 -e "ssh -J lmengoni@jump.fbk.eu" \
+	"/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Data" \
+	lmengoni@miles.fbk.eu:MILES/
+
+# Copy core and EpiModels directories to remote directories
+rsync -avz --chmod=D775,F664 -e "ssh -J lmengoni@jump.fbk.eu" \
+	"/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/core" \
+	"/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/EpiModels" \
+	lmengoni@miles.fbk.eu:MILES/Code/
+
+# Copy utils.py without executable permission
+rsync -avz --chmod=644 -e "ssh -J lmengoni@jump.fbk.eu" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/utils.py" \
+  lmengoni@miles.fbk.eu:MILES/Code/
+
+############### FROM HERE IF COPYING ONLY SCRIPTS #####################
+# Copy the other scripts with executable permission (owner and group, not world)
+# full new pipeline
+rsync -avz --chmod=ug+x,ug+r,o-rwx -e "ssh -J lmengoni@jump.fbk.eu" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/full_pipeline.sh" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/simulate.py" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/aggregate.py" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/find_risk_params.py" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/filter.py" \
+  lmengoni@miles.fbk.eu:MILES/Code/
+
+# Copy utils.py module
+rsync -avz --chmod=644 -e "ssh -J lmengoni@jump.fbk.eu" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/utils.py" \
+  lmengoni@miles.fbk.eu:MILES/Code/
+
+# Copy ModelClass.py module
+rsync -avz --chmod=644 -e "ssh -J lmengoni@jump.fbk.eu" \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Code/core/ModelClass.py" \
+  lmengoni@miles.fbk.eu:MILES/Code/core/
+
+########### Copying select directories from remote server to pc
+rsync -avz -e "ssh -J lmengoni@jump.fbk.eu" \
+  lmengoni@miles.fbk.eu:MILES/Results/run_name \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/Results/prefit_B/"
+
+rsync -avz -e "ssh -J lmengoni@jump.fbk.eu" \
+  lmengoni@miles.fbk.eu:MILES/Results/run_name\
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Results/"
+
+# Copy batch datasets
+rsync -avz -e "ssh -J lmengoni@jump.fbk.eu" \
+  lmengoni@miles.fbk.eu:MILES/Results/batch_datasets \
+  "/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Results/"
+
+########### Copying select directories from pc to remote server
+# Copy run dir to MILES remote directory with reasonable permissions
+rsync -avz --chmod=D775,F664 -e "ssh -J lmengoni@jump.fbk.eu" \
+	"/mnt/c/Users/leonm/Desktop/UNIPD/Physics of Data Magistrale/Tesi magistrale/Project/MILES/Results/run_name" \
+	lmengoni@miles.fbk.eu:MILES/Results/
