@@ -1,0 +1,6 @@
+Running batch simulation 1/6
+Starting simulation
+Param set 1/1000: 2.16 seconds; 115 years
+Param set 2/1000: 1.65 seconds; 115 years
+Param set 3/1000: 1.62 seconds; 115 years
+Param set 4/1000: 1.79 seconds; 116 years
